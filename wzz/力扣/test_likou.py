@@ -2239,26 +2239,58 @@ import numpy
 # k = 6
 # print(a.subarrayLCM(nums,k))
 
-# import collections
+# # import collections
+# class Solution:
+#     def longestPalindrome(self, words: List[str]) -> int:
+#         num = collections.Counter(words)
+#         count = 0
+#         flag = False
+#         for i, j in num.items():
+#             if i[0] == i[1]:
+#                 if j % 2 == 1:
+#                     count += (j - 1)
+#                     flag = True
+#                 else:
+#                     count += j
+#             elif i[::-1] in num:
+#                 t = i[::-1]
+#                 count += min(j,num[t]) * 2
+#                 num[i] = 0
+#                 num[t] = 0
+#         return count * 2 + flag * 2
+#
+# a = Solution()
+# words = ["lc","cl","gg"]
+# print(a.longestPalindrome(words))
+
+import collections
 class Solution:
-    def longestPalindrome(self, words: List[str]) -> int:
-        num = collections.Counter(words)
-        count = 0
-        flag = False
-        for i, j in num.items():
-            if i[0] == i[1]:
-                if j % 2 == 1:
-                    count += (j - 1)
-                    flag = True
-                else:
-                    count += j
-            elif i[::-1] in num:
-                t = i[::-1]
-                count += min(j,num[t]) * 2
-                num[i] = 0
-                num[t] = 0
-        return count * 2 + flag * 2
+    def makeConnected(self, n: int, connections: List[List[int]]) -> int:
+        if len(connections) < n - 1:
+            return -1
+        edges = collections.defaultdict(list)
+        for i, j in connections:
+            edges[i].append(j)
+            edges[j].append(i)
+        ans = 0
+        seen = set()
+        def dfs(u: int):
+            seen.add(u)
+            for v in edges[u]:
+                if v not in seen:
+                    dfs(v)
+        for i in range(n):
+            if i not in seen:
+                dfs(i)
+                ans += 1
+        return ans - 1
+
+
+
+
 
 a = Solution()
-words = ["lc","cl","gg"]
-print(a.longestPalindrome(words))
+n = 4
+connections = [[0,1],[0,2],[1,2]]
+print(a.makeConnected(n,connections))
+

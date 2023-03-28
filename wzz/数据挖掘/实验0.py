@@ -45,4 +45,28 @@
 # plt.show()
 
 
+import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
 
+
+# import xlwt
+# data = pd.read_excel('D:/资料/数据挖掘/catering_sale.xls')
+# sta = data.describe()
+# l_fence = sta.loc['l_fence'] = sta.loc['mean'] - 3 * sta.loc['std']
+# u_fence = sta.loc['u_fence'] = sta.loc['mean'] + 3 * sta.loc['std']
+# data_fliers = data[(data['销量'] > int(u_fence[0])) | (data['销量'] < int(l_fence[0]))]
+# print(int(l_fence[1]),int(u_fence[1]))
+# list_fliers_index = data_fliers['销量'].index.tolist()
+# print(data_fliers)
+# print(list_fliers_index)
+
+# data['销量1'] = data['销量']
+# for i in list_fliers_index:
+#     data['销量1'][i] = None
+# print(data)
+#
+# data['销量2'] = data['销量1'].interpolate()  # 线性插值
+#
+# outputfile = 'D:/资料/数据挖掘/catering_sale.xls'
+# data.to_excel(outputfile)
