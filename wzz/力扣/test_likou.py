@@ -2263,34 +2263,135 @@ import numpy
 # words = ["lc","cl","gg"]
 # print(a.longestPalindrome(words))
 
-import collections
+# import collections
+# class Solution:
+#     def makeConnected(self, n: int, connections: List[List[int]]) -> int:
+#         if len(connections) < n - 1:
+#             return -1
+#         edges = collections.defaultdict(list)
+#         for i, j in connections:
+#             edges[i].append(j)
+#             edges[j].append(i)
+#         ans = 0
+#         seen = set()
+#         def dfs(u: int):
+#             seen.add(u)
+#             for v in edges[u]:
+#                 if v not in seen:
+#                     dfs(v)
+#         for i in range(n):
+#             if i not in seen:
+#                 dfs(i)
+#                 ans += 1
+#         return ans - 1
+#
+# a = Solution()
+# n = 4
+# connections = [[0,1],[0,2],[1,2]]
+# print(a.makeConnected(n,connections))
+
+# class Solution:
+#     def countVowelStrings(self, n: int) -> int:
+#         dp = [1] * 5
+#         for _ in range(n-1):
+#             for j in range(1,5):
+#                 dp[j] += dp[j-1]
+#         return sum(dp)
+#
+# a = Solution()
+# print(a.countVowelStrings(3))
+
+
+# class Solution:
+#     def maxNumberOfFamilies(self, n: int, reservedSeats: List[List[int]]) -> int:
+#         left, middle, right = 0b11110000, 0b11000011, 0b00001111
+#         occupied = collections.defaultdict(int)
+#         for seat in reservedSeats:
+#             if 2 <= seat[1] <= 9:
+#                 occupied[seat[0]] |= (1 << (seat[1] - 2))
+#
+#         ans = (n - len(occupied)) * 2
+#         for row, bitmask in occupied.items():
+#             if (bitmask | left) == left or (bitmask | middle) == middle or (bitmask | right) == right:
+#                 ans += 1
+#         return ans
+#
+#
+# a = Solution()
+# n = 3
+# reservedSeats = [[2,1],[2,2],[2,3],[2,4]]
+# print(a.maxNumberOfFamilies(n,reservedSeats))
+
+
+# class Solution:
+#     def maskPII(self, s: str) -> str:
+#         at = s.find('@')
+#         if at >= 0:
+#             return (s[0] + "*" * 5 + s[at - 1:]).lower()
+#         s = "".join(i for i in s if i.isdigit())
+#         return ["", "+*-", "+**-", "+***-"][len(s) - 10] + "***-***-" + s[-4:]
+#
+#
+#
+# a = Solution()
+# s = "86-(10)12345678"
+# print(a.maskPII(s))
+
+
+# class Solution:
+#     def minScoreTriangulation(self, values: List[int]) -> int:
+#         def dp(i, j):
+#             if i + 2 > j:
+#                 return 0
+#             if i + 2 == j:
+#                 return values[i] * values[i + 1] * values[j]
+#             return min((values[i] * values[k] * values[j] + dp(i, k) + dp(k, j)) for k in range(i + 1, j))
+#         return dp(0, len(values) - 1)
+#
+#
+#
+# a = Solution()
+# values = [1,3,1,4,1,5]
+# print(a.minScoreTriangulation(values))
+
+
+# class Solution:
+#     def prevPermOpt1(self, arr: List[int]) -> List[int]:
+#         n = len(arr)
+#         for i in range(n - 2, -1, -1):
+#             if arr[i] > arr[i + 1]:
+#                 j = n - 1
+#                 while arr[j] >= arr[i] or arr[j] == arr[j - 1]:
+#                     j -= 1
+#                 arr[i], arr[j] = arr[j], arr[i]
+#                 break
+#         return arr
+#
+# a = Solution()
+# arr = [3,2,1]
+# print(a.prevPermOpt1(arr))
+
+# 1,4,16,64,
+# -2,-8,-32
+# 5:101  101
+# 6:110  11010
 class Solution:
-    def makeConnected(self, n: int, connections: List[List[int]]) -> int:
-        if len(connections) < n - 1:
-            return -1
-        edges = collections.defaultdict(list)
-        for i, j in connections:
-            edges[i].append(j)
-            edges[j].append(i)
-        ans = 0
-        seen = set()
-        def dfs(u: int):
-            seen.add(u)
-            for v in edges[u]:
-                if v not in seen:
-                    dfs(v)
-        for i in range(n):
-            if i not in seen:
-                dfs(i)
-                ans += 1
-        return ans - 1
-
-
+    def baseNeg2(self, n: int) -> str:
+        if n == 0 or n == 1:
+            return str(n)
+        res = []
+        while n:
+            remainder = n & 1
+            res.append(str(remainder))
+            n -= remainder
+            n //= -2
+        return ''.join(res[::-1])
 
 
 
 a = Solution()
-n = 4
-connections = [[0,1],[0,2],[1,2]]
-print(a.makeConnected(n,connections))
+print(a.baseNeg(6))
+
+
+
 

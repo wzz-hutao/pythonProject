@@ -12,39 +12,39 @@ from tqdm import tqdm
 import time
 
 # A-单张图像检测
-# # 定义可视化图像函数
-# def look_img(img):
-#     img_RGB = cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
-#     plt.imshow(img_RGB)
-#     plt.show()
-#
-# # 导入solution
-# mp_pose = mp.solutions.pose
-#
-# # 导入绘图函数
-# mp_drawing = mp.solutions.drawing_utils
-# # 导入模型
-# pose = mp_pose.Pose(static_image_mode=True, # 是静态图片还是视频
-#                     model_complexity=2,  # 选择人体姿态关键点检测模型，0性能差但快，2性能好但慢，1介于两者之间
-#                     smooth_landmarks=True, # 是否平滑关键点
-#                     enable_segmentation=True, # 是否人体抠图
-#                     min_tracking_confidence=0.5, # 置信度阈值
-#                     min_detection_confidence=0.5) # 追踪阈值
-#
-# # 从图片文件读入图像，opencv读入为BGR模式
-# img = cv2.imread("D:/robot/OIP-C.jpg")
-#
-# # BGR转RGB
-# img_RGB = cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
-# # 将RGB图像输入模型，获取预测结果
-# results = pose.process(img_RGB)
-# print(results)
-#
-# mp_drawing.draw_landmarks(img,results.pose_landmarks,mp_pose.POSE_CONNECTIONS)
-# look_img(img)
-#
-# # 在3维真实物理坐标系中可视化以米为单位的检测结果
-# mp_drawing.plot_landmarks(results.pose_world_landmarks,mp_pose.POSE_CONNECTIONS)
+# 定义可视化图像函数
+def look_img(img):
+    img_RGB = cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
+    plt.imshow(img_RGB)
+    plt.show()
+
+# 导入solution
+mp_pose = mp.solutions.pose
+
+# 导入绘图函数
+mp_drawing = mp.solutions.drawing_utils
+# 导入模型
+pose = mp_pose.Pose(static_image_mode=True, # 是静态图片还是视频
+                    model_complexity=2,  # 选择人体姿态关键点检测模型，0性能差但快，2性能好但慢，1介于两者之间
+                    smooth_landmarks=True, # 是否平滑关键点
+                    enable_segmentation=True, # 是否人体抠图
+                    min_tracking_confidence=0.5, # 置信度阈值
+                    min_detection_confidence=0.5) # 追踪阈值
+
+# 从图片文件读入图像，opencv读入为BGR模式
+img = cv2.imread("D:/robot/R-C.jpg")
+
+# BGR转RGB
+img_RGB = cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
+# 将RGB图像输入模型，获取预测结果
+results = pose.process(img_RGB)
+print(results)
+
+mp_drawing.draw_landmarks(img,results.pose_landmarks,mp_pose.POSE_CONNECTIONS)
+look_img(img)
+
+# 在3维真实物理坐标系中可视化以米为单位的检测结果
+mp_drawing.plot_landmarks(results.pose_world_landmarks,mp_pose.POSE_CONNECTIONS)
 
 
 # # B-摄像头实时检测
@@ -109,94 +109,94 @@ import time
 
 
 
-# C-单张图像检测+人体抠图+坐标分析+三位交互可视化
-# 定义可视化图像函数
-def look_img(img):
-    img_RGB = cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
-    plt.imshow(img_RGB)
-    plt.show()
-
-# 导入solution
-mp_pose = mp.solutions.pose
-
-# 导入绘图函数
-mp_drawing = mp.solutions.drawing_utils
-# 导入模型
-pose = mp_pose.Pose(static_image_mode=True, # 是静态图片还是视频
-                    model_complexity=2,  # 选择人体姿态关键点检测模型，0性能差但快，2性能好但慢，1介于两者之间
-                    smooth_landmarks=True, # 是否平滑关键点
-                    enable_segmentation=True, # 是否人体抠图
-                    min_tracking_confidence=0.5, # 置信度阈值
-                    min_detection_confidence=0.5) # 追踪阈值
-
-
-img = cv2.imread("D:/robot/OIP-C.jpg")
-
-img_RGB = cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
-results = pose.process(img_RGB)
-
-mask = results.segmentation_mask
-mask = mask > 0.5
-plt.imshow(mask)
-plt.show()  # 人体区域图
-
-# 单通道转三通道
-mask_3 = np.stack((mask,mask,mask),axis=-1)
-MASK_COLOR = [0,200,0]
-fg_image = np.zeros(img.shape,dtype=np.uint8)
-fg_image[:] = MASK_COLOR
-
-# 获得前景人像
-FG_img = np.where(mask_3,img,fg_image)
-
-# 获得抠掉前景人像的背景
-BG_img = np.where(~mask_3,img,fg_image)
-
-look_img(FG_img)
-look_img(BG_img)
-
-# 所有关键点检测结果
-print(results.pose_landmarks)
-print(mp_pose.POSE_CONNECTIONS) # 33个关键点如何连接
-
-# 左胳膊肘关键点的归一化操作
-results_left1 = results.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_ELBOW]
-results_left2 = results.pose_landmarks.landmark[13]
-results_left1_x = results_left1.x
-
-# 原图的像素坐标
-h = img.shape[0]
-w = img.shape[1]
-results_x = results_left1.x * w  # 横
-results_y = results_left1.y * h  # 纵
-
-# 解析指定关键点的真实物理(米)坐标
-results_real = results.pose_world_landmarks.landmark[mp_pose.PoseLandmark.NOSE]  # 鼻子
-
-# 交互式3维可视化
-coords = np.array(results.pose_landmarks.landmark)
-print(len(coords)) # 33个
-
-def get_x(each):
-    return each.x
-def get_y(each):
-    return each.y
-def get_z(each):
-    return each.z
-
-points_x = np.array(list(map(get_x,coords)))
-points_y = np.array(list(map(get_y,coords)))
-points_z = np.array(list(map(get_z,coords)))
-
-# 关键点的坐标
-points = np.vstack([points_x,points_y,points_z]).T
-print(points.shape)
-print(points)
-
-import open3d as o3d
-point_cloud = o3d.geometry.PointCloud()
-point_cloud.points = o3d.utility.Vector3dVector(points)
-o3d.visualization.draw_geometries([point_cloud])
+# # C-单张图像检测+人体抠图+坐标分析+三位交互可视化
+# # 定义可视化图像函数
+# def look_img(img):
+#     img_RGB = cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
+#     plt.imshow(img_RGB)
+#     plt.show()
+#
+# # 导入solution
+# mp_pose = mp.solutions.pose
+#
+# # 导入绘图函数
+# mp_drawing = mp.solutions.drawing_utils
+# # 导入模型
+# pose = mp_pose.Pose(static_image_mode=True, # 是静态图片还是视频
+#                     model_complexity=2,  # 选择人体姿态关键点检测模型，0性能差但快，2性能好但慢，1介于两者之间
+#                     smooth_landmarks=True, # 是否平滑关键点
+#                     enable_segmentation=True, # 是否人体抠图
+#                     min_tracking_confidence=0.5, # 置信度阈值
+#                     min_detection_confidence=0.5) # 追踪阈值
+#
+#
+# img = cv2.imread("D:/robot/R-C.jpg")
+#
+# img_RGB = cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
+# results = pose.process(img_RGB)
+#
+# mask = results.segmentation_mask
+# mask = mask > 0.5
+# plt.imshow(mask)
+# plt.show()  # 人体区域图
+#
+# # 单通道转三通道
+# mask_3 = np.stack((mask,mask,mask),axis=-1)
+# MASK_COLOR = [0,200,0]
+# fg_image = np.zeros(img.shape,dtype=np.uint8)
+# fg_image[:] = MASK_COLOR
+#
+# # 获得前景人像
+# FG_img = np.where(mask_3,img,fg_image)
+#
+# # 获得抠掉前景人像的背景
+# BG_img = np.where(~mask_3,img,fg_image)
+#
+# look_img(FG_img)
+# look_img(BG_img)
+#
+# # 所有关键点检测结果
+# print(results.pose_landmarks)
+# print(mp_pose.POSE_CONNECTIONS) # 33个关键点如何连接
+#
+# # 左胳膊肘关键点的归一化操作
+# results_left1 = results.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_ELBOW]
+# results_left2 = results.pose_landmarks.landmark[13]
+# results_left1_x = results_left1.x
+#
+# # 原图的像素坐标
+# h = img.shape[0]
+# w = img.shape[1]
+# results_x = results_left1.x * w  # 横
+# results_y = results_left1.y * h  # 纵
+#
+# # 解析指定关键点的真实物理(米)坐标
+# results_real = results.pose_world_landmarks.landmark[mp_pose.PoseLandmark.NOSE]  # 鼻子
+#
+# # 交互式3维可视化
+# coords = np.array(results.pose_landmarks.landmark)
+# print(len(coords)) # 33个
+#
+# def get_x(each):
+#     return each.x
+# def get_y(each):
+#     return each.y
+# def get_z(each):
+#     return each.z
+#
+# points_x = np.array(list(map(get_x,coords)))
+# points_y = np.array(list(map(get_y,coords)))
+# points_z = np.array(list(map(get_z,coords)))
+#
+# # 关键点的坐标
+# points = np.vstack([points_x,points_y,points_z]).T
+# print(points.shape)
+# print(points)
+#
+# import open3d as o3d
+# point_cloud = o3d.geometry.PointCloud()
+# point_cloud.points = o3d.utility.Vector3dVector(points)
+# o3d.visualization.draw_geometries([point_cloud])
 
 
 
