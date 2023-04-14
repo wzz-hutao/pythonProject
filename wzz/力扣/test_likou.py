@@ -728,8 +728,9 @@
 # print(a.findPoisonedDuration(t,2))
 import collections
 import heapq
-from typing import List
-
+from bisect import bisect_left
+from itertools import accumulate
+from typing import List, Optional
 
 # class Solution:
 #     def combinationSum(self, candidates: List[int], target: int) -> List[List[int]]:
@@ -2371,27 +2372,130 @@ import numpy
 # arr = [3,2,1]
 # print(a.prevPermOpt1(arr))
 
+
 # 1,4,16,64,
 # -2,-8,-32
 # 5:101  101
 # 6:110  11010
-class Solution:
-    def baseNeg2(self, n: int) -> str:
-        if n == 0 or n == 1:
-            return str(n)
-        res = []
-        while n:
-            remainder = n & 1
-            res.append(str(remainder))
-            n -= remainder
-            n //= -2
-        return ''.join(res[::-1])
+# class Solution:
+#     def baseNeg2(self, n: int) -> str:
+#         if n == 0 or n == 1:
+#             return str(n)
+#         res = []
+#         while n:
+#             remainder = n & 1
+#             res.append(str(remainder))
+#             n -= remainder
+#             n //= -2
+#         return ''.join(res[::-1])
+#
+#
+#
+# a = Solution()
+# print(a.baseNeg(6))
+
+
+# class Solution:
+#     def isRobotBounded(self, instructions: str) -> bool:
+#         direc = [[0, 1], [1, 0], [0, -1], [-1, 0]]
+#         direcIndex = 0
+#         x, y = 0, 0
+#         for instruction in instructions:
+#             if instruction == 'G':
+#                 x += direc[direcIndex][0]
+#                 y += direc[direcIndex][1]
+#             elif instruction == 'L':
+#                 direcIndex -= 1
+#                 direcIndex %= 4
+#             else:
+#                 direcIndex += 1
+#                 direcIndex %= 4
+#         return direcIndex != 0 or (x == 0 and y == 0)
+#
+# a = Solution()
+# instructions = "GGLLGG"
+# print(a.isRobotBounded(instructions))
+
+
+from typing import List
+
+# import collections
+# class Solution:
+#     def mostFrequentEven(self, nums: List[int]) -> int:
+#         m = collections.Counter()
+#         for i in nums:
+#             if i % 2 == 0:
+#                 m[i] += 1
+#         Max = 0
+#         min_i = 0
+#         for i, j in m.items():
+#             if Max <= j:
+#                 Max = j
+#                 min_i = i
+#
+#         for i, j in m.items():
+#             if j == Max:
+#                 min_i = min(min_i,i)
+#
+#         return min_i
+#
+#
+# a = Solution()
+# nums = [4,4,4,9,2,4]
+# print(a.mostFrequentEven(nums))
 
 
 
-a = Solution()
-print(a.baseNeg(6))
+# class Solution:
+#     def camelMatch(self, queries: List[str], pattern: str) -> List[bool]:
+#         n = len(queries)
+#         flag = True
+#         num = []
+#         bool1,bool2 = True, False
+#         for i in range(n):
+#             index = 0
+#             flag = True
+#             for j in range(len(queries[i])):
+#                 if index <= len(pattern) - 1 and pattern[index] == queries[i][j]:
+#                     index += 1
+#                 elif "A" <= queries[i][j] <= "Z":
+#                     num.append(bool2)
+#                     flag = False
+#                     break
+#             if flag:
+#                 num.append(bool1) if index == len(pattern) else num.append(bool2)
+#
+#         return num
+#
+# a = Solution()
+# queries = ["aksvbjLiknuTzqon","ksvjLimflkpnTzqn","mmkasvjLiknTxzqn","ksvjLiurknTzzqbn","ksvsjLctikgnTzqn","knzsvzjLiknTszqn"]
+# pattern = "ksvjLiknTzqn"
+# print(a.camelMatch(queries,pattern))
 
 
+
+# class Solution:
+#     def allPathsSourceTarget(self, graph: List[List[int]]) -> List[List[int]]:
+#         ans = list()
+#         stk = list()
+#
+#         def dfs(x: int):
+#             if x == len(graph) - 1:
+#                 ans.append(stk[:])
+#                 return
+#
+#             for y in graph[x]:
+#                 stk.append(y)
+#                 dfs(y)
+#                 stk.pop()
+#
+#         stk.append(0)
+#         dfs(0)
+#         return ans
+#
+#
+# a = Solution()
+# graph = [[4,3,1],[3,2,4],[3],[4],[]]
+# print(a.allPathsSourceTarget(graph))
 
 

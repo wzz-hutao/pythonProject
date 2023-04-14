@@ -123,61 +123,10 @@
 # sorted([a, b] for a, b in map.items())
 
 
-# # 直接插入排序
-# def insertion_sort(array):
-#     for i in range(len(array)):
-#         cur_index = i
-#         while array[cur_index - 1] > array[cur_index] and cur_index - 1 >= 0:
-#             array[cur_index], array[cur_index - 1] = array[cur_index - 1], array[cur_index]
-#             cur_index -= 1
-#     return array
-#
-#
-# if __name__ == '__main__':
-#     array = [10, 17, 50, 7, 30, 24, 27, 45, 15, 5, 36, 21]
-#     print(insertion_sort(array))
-
-
-# # 希尔排序
-# def shell_sort(array, n):
-#     interval = int(len(array) / n)
-#     while interval > 0:
-#         for i in range(interval, len(array)):
-#             cur_index = i - interval
-#             while cur_index >= 0 and array[cur_index] > array[cur_index + interval]:
-#                 array[cur_index + interval], array[cur_index] = array[cur_index], array[cur_index + interval]
-#                 cur_index -= interval
-#         interval = int(interval / n)
-#     return array
-#
-#
-# if __name__ == '__main__':
-#     array = [10, 17, 50, 7, 30, 24, 27, 45, 15, 5, 36, 21]
-#     print(shell_sort(array,3))
-
-
-# # 冒泡排序
-# def Bubblesort(array):
-#     n = len(array)
-#     exchange = False
-#     for i in range(n):
-#         for j in range(n-1,i+1,-1):
-#             exchange = False
-#             if array[j] < array[j-1]:
-#                 array[j], array[j-1] = array[j-1], array[j]
-#                 exchange = True
-#         if exchange == False:
-#             break
-#     return array
-#
-# if __name__ == '__main__':
-#     array = [1,3,2,6,4,7,9,8]
-#     print(Bubblesort(array))
-
-
 # # 26个字母 大小写
 # char_dx = [chr(i) for i in range(65, 91)]
 # char_xx = [chr(i) for i in range(97, 123)]
+
 
 # import bisect
 # import itertools
@@ -190,6 +139,7 @@
 # nums = [4,5,2,1]
 # queries = [3,10,21]
 # print(a.answerQueries(nums,queries))
+# itertools.accumulate 前缀和
 
 # from typing import List
 
@@ -209,7 +159,7 @@
 # pairwase() 值相邻的
 
 
-# # # 回溯
+# # 回溯
 # class Solution:
 #     def subsets(self, nums: list[int]) -> list[list[int]]:
 #         ans = []
@@ -264,3 +214,57 @@
 
 # 取前面列表索引为[len(s) - 10]的字符串
 # return ["", "+*-", "+**-", "+***-"][len(s) - 10]
+
+
+# # 对角线
+# for i, row in enumerate(nums):
+#     for x in row[i], row[-1 - i]:
+
+
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+#
+# # 链表类
+# class LinkedList(ListNode):
+#     def __init__(self):
+#         super().__init__()
+#         self.head = None
+#
+#     # 根据 data 初始化一个新链表
+#     def create(self, data):
+#         self.head = ListNode(data[0])
+#         cur = self.head
+#         for i in range(1,len(data)):
+#             node = ListNode(data[i])
+#             cur.next = node
+#             cur = cur.next
+#
+# head = [2,7,4,3,5]
+# l = LinkedList()
+# l.create(head)
+#
+#
+# class Solution:
+#     def nextLargerNodes(self, head: Optional[ListNode]) -> List[int]:
+#         ans = list()
+#         s = list()
+#
+#         cur = head
+#         idx = -1
+#         while cur:
+#             idx += 1
+#             ans.append(0)
+#             while s and s[-1][0] < cur.val:
+#                 ans[s[-1][1]] = cur.val
+#                 s.pop()
+#             s.append((cur.val, idx))
+#             cur = cur.next
+#
+#         return ans
+#
+# a = Solution()
+# print(a.nextLargerNodes(l.head))
+
+
